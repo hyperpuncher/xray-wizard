@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONFIG_DIR=/usr/local/etc/xray/
+CONFIG_DIR=/usr/local/etc/xray
 CONFIG=$CONFIG_DIR/config.json
 CLIENT_CONFIG_TEMPLATE=$CONFIG_DIR/config_client.json
 IP=$(curl -s ifconfig.co | tr -d '\n')
@@ -31,8 +31,9 @@ install() {
 }
 
 add() {
+	NAME=$1
 	UUID=$(xray uuid)
-	CLIENT="{\"id\": \"$UUID\", \"flow\": \"xtls-rprx-vision\"},"
+	CLIENT="{\"id\": \"$UUID\", \"email\": \"$NAME\",  \"flow\": \"xtls-rprx-vision\"},"
 	LINK="\`vless://$UUID@$IP:443?security=reality&encryption=none&pbk=$PUBLIC_KEY&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision#xray\`"
 	TEMP_FILE=$(mktemp)
 
@@ -48,11 +49,60 @@ add() {
     	.outbounds[0].streamSettings.realitySettings.publicKey = $pubkey
 		' $CLIENT_CONFIG_TEMPLATE >"$TEMP_FILE"
 
-	#TODO
-	# mv "$TEMP_FILE"
+	mkdir "$CONFIG_DIR/$NAME"
+	mv "$TEMP_FILE" "$CONFIG_DIR/$NAME/config.json"
 
-	echo "$LINK"
+	echo "$LINK" | tee "$CONFIG_DIR/$NAME/link"
 
 	qrencode -t ANSIUTF8 "$LINK"
-	qrencode -t svg -o qr.svg "$LINK"
+	qrencode -t svg -o "$CONFIG_DIR/$NAME/qr.svg" "$LINK"
 }
+
+remove() {
+	NAME=$1
+	TEMP_FILE=$(mktemp)
+	jq --arg name "$NAME" '.inbounds[].settings.clients |= map(select(.email != $name))' $CONFIG >"$TEMP_FILE"
+
+	mv "$TEMP_FILE" $CONFIG
+
+	rm -rf "$CONFIG_DIR/$NAME"
+}
+
+list() {
+	jq -r '.inbounds[].settings.clients[].email' $CONFIG
+}
+
+case $1 in
+"-a")
+	if [ "$#" -lt 2 ]; then
+		echo "Usage: xray-wizard -a <client_name>"
+		exit 1
+	fi
+	add "$2"
+	;;
+"-r")
+	if [ "$#" -lt 2 ]; then
+		echo "Usage: xray-wizard -r <client_name>"
+		exit 1
+	fi
+	remove "$2"
+	;;
+"-l")
+	list
+	;;
+"-i")
+	install
+	;;
+*)
+	cat <<EOF
+Usage: xray-wizard [options]
+
+Options:
+ -a <client_name>  Add new client
+ -r <client_name>  Remove client
+ -l                List clients
+ -i                Setup xray
+EOF
+	exit 1
+	;;
+esac
