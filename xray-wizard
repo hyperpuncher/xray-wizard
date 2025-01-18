@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+CONFIG_DIR=/usr/local/etc/xray/
+CONFIG=$CONFIG_DIR/config.json
+CLIENT_CONFIG_TEMPLATE=$CONFIG_DIR/config_client.json
+IP=$(curl -s ifconfig.co | tr -d '\n')
+
+install() {
+	apt update
+	apt install jq qrencode
+	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+
+	read -d '/n' -r PRIVATE_KEY PUBLIC_KEY < <(xray x25519 | awk '{print $3}')
+
+	echo "$PUBLIC_KEY" >$CONFIG_DIR/pubkey
+
+	TEMP_FILE=$(mktemp)
+
+	curl -s "https://raw.githubusercontent.com/hyperpuncher/xray-wizard/refs/heads/main/config_server_template.json" >"$TEMP_FILE"
+
+	jq --arg privkey "$PRIVATE_KEY" '
+		.inbounds[0].streamSettings.realitySettings.privateKey = $privkey
+		' "$TEMP_FILE" >$CONFIG
+
+	curl -s "https://raw.githubusercontent.com/hyperpuncher/xray-wizard/refs/heads/main/config_client_template.json" >"$TEMP_FILE"
+
+	jq --arg pubkey "$PUBLIC_KEY" '
+		.outbounds[0].streamSettings.realitySettings.publicKey = $pubkey
+		' "$TEMP_FILE" >"$CLIENT_CONFIG_TEMPLATE"
+
+}
+
+add() {
+	UUID=$(xray uuid)
+	CLIENT="{\"id\": \"$UUID\", \"flow\": \"xtls-rprx-vision\"},"
+	LINK="\`vless://$UUID@$IP:443?security=reality&encryption=none&pbk=$PUBLIC_KEY&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision#xray\`"
+	TEMP_FILE=$(mktemp)
+
+	jq --argjson client "$CLIENT" '
+		.inbounds[0].settings.clients += $client
+		' $CONFIG >"$TEMP_FILE"
+
+	mv "$TEMP_FILE" $CONFIG
+
+	jq --arg ip "$IP" --arg uuid "$UUID" --arg pubkey "$PUBLIC_KEY" '
+    	.outbounds[0].settings.vnext[0].address = $ip |
+		.outbounds[0].settings.vnext[0].users[0].id = $uuid |
+    	.outbounds[0].streamSettings.realitySettings.publicKey = $pubkey
+		' $CLIENT_CONFIG_TEMPLATE >"$TEMP_FILE"
+
+	#TODO
+	# mv "$TEMP_FILE"
+
+	echo "$LINK"
+
+	qrencode -t ANSIUTF8 "$LINK"
+	qrencode -t svg -o qr.svg "$LINK"
+}
