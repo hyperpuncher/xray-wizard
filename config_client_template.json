@@ -1,0 +1,68 @@
+{
+	"log": {
+		"loglevel": "debug"
+	},
+	"inbounds": [
+		{
+			"listen": "127.0.0.1",
+			"port": 10808,
+			"protocol": "socks",
+			"settings": {
+				"udp": true
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": ["http", "tls", "quic"],
+				"routeOnly": true
+			}
+		}
+	],
+	"outbounds": [
+		{
+			"protocol": "vless",
+			"settings": {
+				"vnext": [
+					{
+						"address": "",
+						"port": 443,
+						"users": [
+							{
+								"id": "",
+								"encryption": "none",
+								"flow": "xtls-rprx-vision"
+							}
+						]
+					}
+				]
+			},
+			"streamSettings": {
+				"network": "tcp",
+				"security": "reality",
+				"realitySettings": {
+					"fingerprint": "chrome",
+					"serverName": "",
+					"publicKey": "",
+					"spiderX": "",
+					"shortId": ""
+				}
+			},
+			"tag": "proxy"
+		},
+		{
+			"protocol": "freedom",
+			"tag": "direct"
+		}
+	],
+	"routing": {
+		"rules": [
+			{
+				"domain": "ifconfig.co",
+				"outboundTag": "proxy"
+			},
+			{
+				"network": "tcp,udp",
+				"outboundTag": "direct"
+			}
+		]
+	}
+}

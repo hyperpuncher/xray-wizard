@@ -1,0 +1,36 @@
+{
+	"log": {
+		"loglevel": "debug"
+	},
+	"inbounds": [
+		{
+			"port": 443,
+			"protocol": "vless",
+			"settings": {
+				"clients": [],
+				"decryption": "none"
+			},
+			"streamSettings": {
+				"network": "tcp",
+				"security": "reality",
+				"realitySettings": {
+					"dest": "1.1.1.1:443",
+					"serverNames": [""],
+					"privateKey": "",
+					"shortIds": ["", "0123456789abcdef"]
+				}
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": ["http", "tls", "quic"],
+				"routeOnly": true
+			}
+		}
+	],
+	"outbounds": [
+		{
+			"protocol": "freedom",
+			"tag": "direct"
+		}
+	]
+}
