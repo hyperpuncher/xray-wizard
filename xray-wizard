@@ -33,7 +33,7 @@ install() {
 add() {
 	NAME=$1
 	UUID=$(xray uuid)
-	LINK="\`vless://$UUID@$IP:443?security=reality&encryption=none&pbk=$PUBLIC_KEY&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision#xray\`"
+	LINK="vless://$UUID@$IP:443?security=reality&encryption=none&pbk=$PUBLIC_KEY&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision#xray"
 	TEMP_FILE=$(mktemp)
 
 	jq --arg uuid "$UUID" --arg name "$NAME" '
@@ -52,10 +52,10 @@ add() {
 	mkdir "$CONFIG_DIR/$NAME"
 	mv "$TEMP_FILE" "$CONFIG_DIR/$NAME/config.json"
 
-	echo "$LINK" | tee "$CONFIG_DIR/$NAME/link"
-
 	qrencode -t ANSIUTF8 "$LINK"
 	qrencode -t svg -o "$CONFIG_DIR/$NAME/qr.svg" "$LINK"
+
+	echo "$LINK" | tee "$CONFIG_DIR/$NAME/link"
 }
 
 remove() {
