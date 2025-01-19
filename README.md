@@ -3,6 +3,7 @@
 ```sh
 curl -sOL https://github.com/hyperpuncher/xray-wizard/raw/refs/heads/main/xray-wizard
 chmod +x xray-wizard
+mv xray-wizard /usr/local/bin
 ```
 
 ## Usage
