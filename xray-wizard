@@ -33,13 +33,13 @@ install() {
 add() {
 	NAME=$1
 	UUID=$(xray uuid)
-	CLIENT="{\"id\": \"$UUID\", \"email\": \"$NAME\",  \"flow\": \"xtls-rprx-vision\"},"
 	LINK="\`vless://$UUID@$IP:443?security=reality&encryption=none&pbk=$PUBLIC_KEY&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision#xray\`"
 	TEMP_FILE=$(mktemp)
 
-	jq --argjson client "$CLIENT" '
-		.inbounds[0].settings.clients += $client
-		' $CONFIG >"$TEMP_FILE"
+	jq --arg uuid "$UUID" --arg name "$NAME" '
+		.inbounds[0].settings.clients += [{
+			"id": $uuid, "email": $name, "flow": "xtls-rprx-vision"
+		}]' $CONFIG >"$TEMP_FILE"
 
 	mv "$TEMP_FILE" $CONFIG
 
