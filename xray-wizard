@@ -36,6 +36,7 @@ add() {
 	PUBLIC_KEY=$(cat $CONFIG_DIR/pubkey)
 	LINK="vless://$UUID@$IP:443?security=reality&encryption=none&pbk=$PUBLIC_KEY&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision#xray"
 	TEMP_FILE=$(mktemp)
+	chmod 644 "$TEMP_FILE"
 
 	jq --arg uuid "$UUID" --arg name "$NAME" '
 		.inbounds[0].settings.clients += [{
@@ -57,16 +58,22 @@ add() {
 	qrencode -t svg -o "$CONFIG_DIR/$NAME/qr.svg" "$LINK"
 
 	echo "$LINK" | tee "$CONFIG_DIR/$NAME/link"
+
+	systemctl restart xray.service
 }
 
 remove() {
 	NAME=$1
 	TEMP_FILE=$(mktemp)
+	chmod 644 "$TEMP_FILE"
+
 	jq --arg name "$NAME" '.inbounds[].settings.clients |= map(select(.email != $name))' $CONFIG >"$TEMP_FILE"
 
 	mv "$TEMP_FILE" $CONFIG
 
 	rm -rf "$CONFIG_DIR/$NAME"
+
+	systemctl restart xray.service
 }
 
 list() {
