@@ -82,7 +82,7 @@ list() {
 
 get() {
 	NAME=$1
-	qrencode -t ANSIUTF8 "$CONFIG_DIR/$NAME/link"
+	qrencode -t ANSIUTF8 -f "$CONFIG_DIR/$NAME/link"
 	cat "$CONFIG_DIR/$NAME/link"
 }
 
