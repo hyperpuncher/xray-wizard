@@ -15,5 +15,6 @@ Options:
  -a <client_name>  Add new client
  -r <client_name>  Remove client
  -l                List clients
+ -g <client_name>  Get client's config
  -i                Setup xray
 ```

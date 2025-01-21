@@ -80,6 +80,12 @@ list() {
 	jq -r '.inbounds[].settings.clients[].email' $CONFIG
 }
 
+get() {
+	NAME=$1
+	qrencode -t ANSIUTF8 "$CONFIG_DIR/$NAME/link"
+	cat "$CONFIG_DIR/$NAME/link"
+}
+
 case $1 in
 "-a")
 	if [ "$#" -lt 2 ]; then
@@ -101,6 +107,13 @@ case $1 in
 "-i")
 	install
 	;;
+"-g")
+	if [ "$#" -lt 2 ]; then
+		echo "Usage: xray-wizard -g <client_name>"
+		exit 1
+	fi
+	get "$2"
+	;;
 *)
 	cat <<EOF
 Usage: xray-wizard [options]
@@ -109,6 +122,7 @@ Options:
  -a <client_name>  Add new client
  -r <client_name>  Remove client
  -l                List clients
+ -g <client_name>  Get client's config
  -i                Setup xray
 EOF
 	exit 1
