@@ -17,4 +17,5 @@ Options:
  -l                List clients
  -g <client_name>  Get client config
  -i                Setup xray
+ -u                Update script
 ```
