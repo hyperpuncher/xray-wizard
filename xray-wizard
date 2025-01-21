@@ -28,6 +28,7 @@ install() {
 		.outbounds[0].streamSettings.realitySettings.publicKey = $pubkey
 		' "$TEMP_FILE" >"$CLIENT_CONFIG_TEMPLATE"
 
+	echo -e "\nxray-wizard installed 🪄"
 }
 
 add() {
@@ -90,6 +91,7 @@ update() {
 	curl -sOL https://github.com/hyperpuncher/xray-wizard/raw/refs/heads/main/xray-wizard
 	chmod +x xray-wizard
 	mv xray-wizard /usr/local/bin
+	echo -e "\nxray-wizard updated 🪄"
 }
 
 case $1 in
