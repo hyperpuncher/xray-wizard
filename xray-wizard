@@ -55,7 +55,7 @@ add() {
 	mv "$TEMP_FILE" "$CONFIG_DIR/$NAME/config.json"
 
 	qrencode -t ANSIUTF8 "$LINK"
-	qrencode -t svg -o "$CONFIG_DIR/$NAME/qr.svg" "$LINK"
+	qrencode -o "$CONFIG_DIR/$NAME/qr.png" "$LINK"
 
 	echo "$LINK" | tee "$CONFIG_DIR/$NAME/link"
 
