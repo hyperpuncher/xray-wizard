@@ -86,6 +86,12 @@ get() {
 	cat "$CONFIG_DIR/$NAME/link"
 }
 
+update() {
+	curl -sOL https://github.com/hyperpuncher/xray-wizard/raw/refs/heads/main/xray-wizard
+	chmod +x xray-wizard
+	mv xray-wizard /usr/local/bin
+}
+
 case $1 in
 "-a")
 	if [ "$#" -lt 2 ]; then
@@ -114,6 +120,9 @@ case $1 in
 	fi
 	get "$2"
 	;;
+"-u")
+	update
+	;;
 *)
 	cat <<EOF
 Usage: xray-wizard [options]
@@ -124,6 +133,7 @@ Options:
  -l                List clients
  -g <client_name>  Get client config
  -i                Setup xray
+ -u                Update script
 EOF
 	exit 1
 	;;
