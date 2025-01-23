@@ -88,6 +88,7 @@ get() {
 }
 
 update() {
+	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 	curl -sOL https://github.com/hyperpuncher/xray-wizard/raw/refs/heads/main/xray-wizard
 	chmod +x xray-wizard
 	mv xray-wizard /usr/local/bin
