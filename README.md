@@ -19,3 +19,33 @@ Options:
  -i                Setup xray
  -u                Update script
 ```
+
+## Apps
+
+### Linux
+
+#### Arch
+
+```sh
+sudo paru -S xray
+```
+
+### Windows
+
+```sh
+winget install --id=MatsuriDayo.NekoRay -e
+```
+
+### macOS
+
+```sh
+brew install xray
+```
+
+### Android
+
+[v2rayNG](https://github.com/2dust/v2rayNG)
+
+### iOS
+
+[Streisand](https://apps.apple.com/app/streisand/id6450534064)
