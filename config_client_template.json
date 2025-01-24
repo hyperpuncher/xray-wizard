@@ -19,6 +19,10 @@
 	],
 	"outbounds": [
 		{
+			"protocol": "freedom",
+			"tag": "direct"
+		},
+		{
 			"protocol": "vless",
 			"settings": {
 				"vnext": [
@@ -47,21 +51,17 @@
 				}
 			},
 			"tag": "proxy"
-		},
-		{
-			"protocol": "freedom",
-			"tag": "direct"
 		}
 	],
 	"routing": {
 		"rules": [
 			{
-				"domain": "ifconfig.co",
+				"domain": [
+					"domain:openai.com",
+					"domain:chatgpt.com",
+					"domain:onshape.com"
+				],
 				"outboundTag": "proxy"
-			},
-			{
-				"network": "tcp,udp",
-				"outboundTag": "direct"
 			}
 		]
 	}
