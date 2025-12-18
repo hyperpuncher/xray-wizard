@@ -11,7 +11,7 @@
 				"decryption": "none"
 			},
 			"streamSettings": {
-				"network": "tcp",
+				"network": "raw",
 				"security": "reality",
 				"realitySettings": {
 					"dest": "1.1.1.1:443",

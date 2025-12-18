@@ -40,7 +40,7 @@
 				]
 			},
 			"streamSettings": {
-				"network": "tcp",
+				"network": "raw",
 				"security": "reality",
 				"realitySettings": {
 					"fingerprint": "chrome",
