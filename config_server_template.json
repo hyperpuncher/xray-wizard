@@ -32,5 +32,9 @@
 			"protocol": "freedom",
 			"tag": "direct"
 		}
-	]
+	],
+	"dns": {
+		"servers": ["https+local://1.1.1.1/dns-query", "https+local://1.0.0.1/dns-query"],
+		"queryStrategy": "UseIPv4"
+	}
 }
