@@ -19,10 +19,6 @@
 	],
 	"outbounds": [
 		{
-			"protocol": "freedom",
-			"tag": "direct"
-		},
-		{
 			"protocol": "vless",
 			"settings": {
 				"vnext": [
@@ -51,9 +47,14 @@
 				}
 			},
 			"tag": "proxy"
+		},
+		{
+			"protocol": "freedom",
+			"tag": "direct"
 		}
 	],
 	"routing": {
+		"domainStrategy": "IPIfNonMatch",
 		"rules": [
 			{
 				"domain": [
@@ -62,6 +63,10 @@
 					"domain:onshape.com"
 				],
 				"outboundTag": "proxy"
+			},
+			{
+				"ip": ["geoip:private", "geoip:by", "geoip:ru"],
+				"outboundTag": "direct"
 			}
 		]
 	}
