@@ -12,12 +12,13 @@ mv xray-wizard /usr/local/bin
 Usage: xray-wizard [options]
 
 Options:
- -a <client_name>  Add new client
- -r <client_name>  Remove client
- -l                List clients
- -g <client_name>  Get client config
- -i                Setup xray
- -u                Update script
+	-a, --add <client_name>    Add new client
+	-r, --remove <client_name> Remove client
+	-l, --list                 List clients
+	-g, --get <client_name>    Get client config
+	-i, --init                 Setup xray
+	-u, --update               Update script
+	    --uninstall            Uninstall script
 ```
 
 ## Apps
