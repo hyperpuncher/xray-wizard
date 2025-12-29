@@ -5,7 +5,7 @@ CONFIG=$CONFIG_DIR/config.json
 CLIENT_CONFIG_TEMPLATE=$CONFIG_DIR/config_client.json
 IP=$(curl -s ifconfig.co | tr -d '\n')
 
-install() {
+init() {
 	apt update
 	apt install jq qrencode
 	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
@@ -103,47 +103,51 @@ update() {
 }
 
 case $1 in
-"-a")
+"-a" | "--add")
 	if [ "$#" -lt 2 ]; then
 		echo "Usage: xray-wizard -a <client_name>"
 		exit 1
 	fi
 	add "$2"
 	;;
-"-r")
+"-r" | "--remove")
 	if [ "$#" -lt 2 ]; then
 		echo "Usage: xray-wizard -r <client_name>"
 		exit 1
 	fi
 	remove "$2"
 	;;
-"-l")
+"-l" | "--list")
 	list
 	;;
-"-i")
-	install
+"-i" | "--init")
+	init
 	;;
-"-g")
+"-g" | "--get")
 	if [ "$#" -lt 2 ]; then
 		echo "Usage: xray-wizard -g <client_name>"
 		exit 1
 	fi
 	get "$2"
 	;;
-"-u")
+"-u" | "--update")
 	update
+	;;
+"--uninstall")
+	uninstall
 	;;
 *)
 	cat <<EOF
 Usage: xray-wizard [options]
 
 Options:
- -a <client_name>  Add new client
- -r <client_name>  Remove client
- -l                List clients
- -g <client_name>  Get client config
- -i                Setup xray
- -u                Update script
+	-a, --add <client_name>    Add new client
+	-r, --remove <client_name> Remove client
+	-l, --list                 List clients
+	-g, --get <client_name>    Get client config
+	-i, --init                 Setup xray
+	-u, --update               Update script
+	    --uninstall            Uninstall script
 EOF
 	exit 1
 	;;
