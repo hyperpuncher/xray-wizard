@@ -31,6 +31,13 @@ install() {
 	echo -e "\nxray-wizard installed 🪄"
 }
 
+uninstall() {
+	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove
+	rm -rf $CONFIG_DIR
+	rm /usr/local/bin/xray-wizard
+	echo -e "\nxray-wizard uninstalled 🪄"
+}
+
 add() {
 	NAME=$1
 	UUID=$(xray uuid)
