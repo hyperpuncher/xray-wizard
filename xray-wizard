@@ -10,7 +10,7 @@ init() {
 	apt install jq qrencode
 	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
-	read -d '/n' -r PRIVATE_KEY PUBLIC_KEY < <(xray x25519 | awk '{print $3}')
+	read -d '/n' -r PRIVATE_KEY PUBLIC_KEY < <(xray x25519 | awk '{print $2}')
 
 	echo "$PUBLIC_KEY" >$CONFIG_DIR/pubkey
 
