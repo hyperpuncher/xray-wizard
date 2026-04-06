@@ -34,7 +34,7 @@ sudo paru -S xray
 ### Windows
 
 ```sh
-winget install --id=MatsuriDayo.NekoRay -e
+winget install -e --id XTLS.Xray-core
 ```
 
 ### macOS
