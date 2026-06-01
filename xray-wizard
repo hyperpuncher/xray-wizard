@@ -5,7 +5,7 @@ CONFIG=$CONFIG_DIR/config.json
 CLIENT_CONFIG_TEMPLATE=$CONFIG_DIR/config_client.json
 XRAY_INSTALLER=https://github.com/XTLS/Xray-install/raw/main/install-release.sh
 WIZARD_BASE=https://github.com/hyperpuncher/xray-wizard/raw/main
-IP=$(wget -qO- ifconfig.co | tr -d '\n')
+IP=$(wget -qO- https://ifconfig.co | tr -d '\n')
 
 init() {
 	apt update
