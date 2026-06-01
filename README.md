@@ -1,7 +1,7 @@
 ## Install
 
 ```sh
-curl -sOL https://github.com/hyperpuncher/xray-wizard/raw/refs/heads/main/xray-wizard
+wget https://github.com/hyperpuncher/xray-wizard/raw/main/xray-wizard
 chmod +x xray-wizard
 mv xray-wizard /usr/local/bin
 ```

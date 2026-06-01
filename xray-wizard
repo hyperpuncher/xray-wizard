@@ -3,12 +3,14 @@
 CONFIG_DIR=/usr/local/etc/xray
 CONFIG=$CONFIG_DIR/config.json
 CLIENT_CONFIG_TEMPLATE=$CONFIG_DIR/config_client.json
-IP=$(curl -s ifconfig.co | tr -d '\n')
+XRAY_INSTALLER=https://github.com/XTLS/Xray-install/raw/main/install-release.sh
+WIZARD_BASE=https://github.com/hyperpuncher/xray-wizard/raw/main
+IP=$(wget -qO- ifconfig.co | tr -d '\n')
 
 init() {
 	apt update
 	apt install jq qrencode
-	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+	bash -c "$(wget -qO- $XRAY_INSTALLER)" @ install
 
 	read -r PRIVATE_KEY PUBLIC_KEY _ < <(xray x25519 | cut -d ' ' -f 2 | xargs)
 
@@ -16,13 +18,13 @@ init() {
 
 	TEMP_FILE=$(mktemp)
 
-	curl -s "https://raw.githubusercontent.com/hyperpuncher/xray-wizard/refs/heads/main/config_server_template.json" >"$TEMP_FILE"
+	wget -qO "$TEMP_FILE" "$WIZARD_BASE/config_server_template.json"
 
 	jq --arg privkey "$PRIVATE_KEY" '
 		.inbounds[0].streamSettings.realitySettings.privateKey = $privkey
 		' "$TEMP_FILE" >$CONFIG
 
-	curl -s "https://raw.githubusercontent.com/hyperpuncher/xray-wizard/refs/heads/main/config_client_template.json" >"$TEMP_FILE"
+	wget -qO "$TEMP_FILE" "$WIZARD_BASE/config_client_template.json"
 
 	jq --arg pubkey "$PUBLIC_KEY" '
 		.outbounds[0].streamSettings.realitySettings.publicKey = $pubkey
@@ -32,7 +34,7 @@ init() {
 }
 
 uninstall() {
-	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove
+	bash -c "$(wget -qO- $XRAY_INSTALLER)" @ remove
 	rm -rf $CONFIG_DIR
 	rm /usr/local/bin/xray-wizard
 	echo -e "\nxray-wizard uninstalled 🪄"
@@ -95,8 +97,8 @@ get() {
 }
 
 update() {
-	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
-	curl -sOL https://github.com/hyperpuncher/xray-wizard/raw/refs/heads/main/xray-wizard
+	bash -c "$(wget -qO- $XRAY_INSTALLER)" @ install
+	wget -q $WIZARD_BASE/xray-wizard
 	chmod +x xray-wizard
 	mv xray-wizard /usr/local/bin
 	echo -e "\nxray-wizard updated 🪄"
