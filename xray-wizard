@@ -12,7 +12,7 @@ init() {
 	apt install jq qrencode
 	bash -c "$(wget -qO- $XRAY_INSTALLER)" @ install
 
-	read -r PRIVATE_KEY PUBLIC_KEY _ < <(xray x25519 | cut -d ' ' -f 2 | xargs)
+	read -r PRIVATE_KEY PUBLIC_KEY _ < <(xray x25519 | cut -d ':' -f 2 | xargs)
 
 	echo "$PUBLIC_KEY" >$CONFIG_DIR/pubkey
 
